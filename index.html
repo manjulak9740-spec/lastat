@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Manaswi - Daisydew</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .slide { display: none; }
+        .slide.active { display: flex; }
+        
+        .img-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 6px; 
+            width: 100%;
+        }
+        .tiny-photo { 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            object-fit: cover; 
+            border-radius: 4px; 
+            border: 1px solid #f3cd82;
+            transition: transform 0.2s;
+        }
+        .tiny-photo:hover { transform: scale(1.1); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="app" class="max-w-xl w-full text-center">
+        
+        <!-- Welcome Slide -->
+        <section id="slide-0" class="slide active flex-col items-center gap-4 py-10">
+            <p class="text-yellow-300 font-medium tracking-wide">To the most beautiful soul I know</p>
+            <h1 class="text-5xl font-bold text-yellow-400">Daisydew</h1>
+            <div class="text-7xl my-4">🌼</div>
+            <p class="text-lg italic">Welcome to your birthday memory journey.</p>
+            <button onclick="goToSlide(1)" class="bg-yellow-600 hover:bg-yellow-500 text-white py-3 px-8 rounded-full transition shadow-lg mt-6">Start the Journey</button>
+        </section>
+
+        <!-- Slide 1 -->
+        <section id="slide-1" class="slide flex-col items-center gap-4">
+            <h2 class="text-xl font-bold text-yellow-400">Pure Perfection</h2>
+            <div id="grid-1-top" class="img-grid"></div>
+            <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/30 w-full shadow-xl">
+                <p class="text-sm">Exactly 7303 days ago, the world became a brighter place because you arrived. Your grace touches everyone you meet.</p>
+            </div>
+            <div id="grid-1-bottom" class="img-grid"></div>
+            <button onclick="goToSlide(2)" class="mt-4 text-yellow-500 hover:text-yellow-300 underline text-sm">Next Memory →</button>
+        </section>
+
+        <!-- Slide 2 -->
+        <section id="slide-2" class="slide flex-col items-center gap-4">
+            <h2 class="text-xl font-bold text-yellow-400">Your Special Day</h2>
+            <div id="grid-2-top" class="img-grid"></div>
+            <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/30 w-full shadow-xl">
+                <p class="text-sm">Today is all about celebrating you. May this year be filled with as much happiness, laughter, and light as you give to the world every single day.</p>
+            </div>
+            <div id="grid-2-bottom" class="img-grid"></div>
+            <button onclick="goToSlide(3)" class="mt-4 text-yellow-500 hover:text-yellow-300 underline text-sm">Next Memory →</button>
+        </section>
+
+        <!-- Slide 3 -->
+        <section id="slide-3" class="slide flex-col items-center gap-4">
+            <h2 class="text-xl font-bold text-yellow-400">A Rare Spark</h2>
+            <div id="grid-3-top" class="img-grid"></div>
+            <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/30 w-full shadow-xl">
+                <p class="text-sm">You have a unique magic. Thank you for being exactly who you are. Keep shining, Daisydew!</p>
+            </div>
+            <div id="grid-3-bottom" class="img-grid"></div>
+            <button onclick="goToSlide(0)" class="mt-4 text-yellow-500 hover:text-yellow-300 underline text-sm">Back to Start</button>
+        </section>
+    </div>
+
+    <script>
+        const totalImages = 43;
+        const extensions = ['.jpeg', '.jpg', '.JPG', '.JPEG'];
+
+        function tryLoad(img, baseName) {
+            let extIndex = 0;
+            function attempt() {
+                if (extIndex >= extensions.length) {
+                    img.src = "https://placehold.co/100x100/333/fff?text=Photo";
+                    return;
+                }
+                img.src = baseName + extensions[extIndex];
+                extIndex++;
+            }
+            img.onerror = attempt;
+            attempt();
+        }
+
+        function setupImages() {
+            // Distribute images: 
+            // Slide 1 (14): 7 top, 7 bottom
+            // Slide 2 (14): 7 top, 7 bottom
+            // Slide 3 (15): 7 top, 8 bottom
+            for (let i = 1; i <= totalImages; i++) {
+                let slideNum, target;
+                if (i <= 14) {
+                    slideNum = 1;
+                    target = i <= 7 ? "top" : "bottom";
+                } else if (i <= 28) {
+                    slideNum = 2;
+                    target = (i - 14) <= 7 ? "top" : "bottom";
+                } else {
+                    slideNum = 3;
+                    target = (i - 28) <= 7 ? "top" : "bottom";
+                }
+                
+                const container = document.getElementById(`grid-${slideNum}-${target}`);
+                if (container) {
+                    const img = document.createElement('img');
+                    img.className = 'tiny-photo';
+                    tryLoad(img, `pic${i}`);
+                    container.appendChild(img);
+                }
+            }
+        }
+
+        function goToSlide(n) {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.getElementById(`slide-${n}`).classList.add('active');
+        }
+
+        window.onload = setupImages;
+    </script>
+</body>
+</html>
